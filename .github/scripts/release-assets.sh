@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the release asset set: copies the user's scripts (handoff.sh,
-# handoff.ps1) and the agent's (agent-setup.sh, consume.py) from
-# credential-lockbox/ into OUTDIR and writes
+# handoff.ps1) and the agent's (agent-setup.sh, consume.py) from the
+# repository root into OUTDIR and writes
 # OUTDIR/SHA256SUMS (sha256sum format, LF endings, sorted by name).
 # Deterministic: the same tree gives the same bytes. Runs on Linux and macOS.
 set -euo pipefail
@@ -12,7 +12,7 @@ if [ "$#" -ne 1 ] || [ -z "$1" ]; then
 fi
 out=$1
 root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
-src="$root/credential-lockbox"
+src="$root"
 assets="agent-setup.sh consume.py handoff.ps1 handoff.sh" # sorted (LC_ALL=C), so SHA256SUMS is sorted
 
 for f in $assets; do

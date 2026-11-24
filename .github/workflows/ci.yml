@@ -54,7 +54,7 @@ jobs:
         # A fresh clone must be able to run ./handoff.sh and friends.
         run: |
           set -o pipefail
-          bad=$(git ls-files -s credential-lockbox \
+          bad=$(git ls-files -s \
             | awk '$1 != "100755" && $4 ~ /(\.sh|\.py)$/ { print $4 }')
           if [ -n "$bad" ]; then
             echo "not executable in git: $bad"
@@ -70,7 +70,7 @@ jobs:
             exit 1
           fi
       - name: shellcheck
-        run: shellcheck credential-lockbox/*.sh credential-lockbox/test/*.sh
+        run: shellcheck *.sh test/*.sh
       - name: The scripts parse under bash 3.2 (macOS /bin/bash)
         # shellcheck doesn't know bash 3.2's parser bugs (a `)` in a case
         # pattern inside $(...) ends the substitution there). agent-setup.sh
@@ -81,17 +81,17 @@ jobs:
         # nothing for it: the macOS job's POSIX-mode round trips (run-test.sh,
         # under the bash 3.2 that job checks is on PATH) cover that one.
         run: |
-          docker run --rm -v "$PWD/credential-lockbox:/w:ro" -w /w \
+          docker run --rm -v "$PWD:/w:ro" -w /w \
             bash:3.2@sha256:2556c2da19c32c1614d318645c73a7bf64d38be21cf69e98e3ca51f053983719 \
             sh -c 'bash --version | head -1 && for f in agent-setup.sh handoff.sh test/run-test.sh; do bash -n "$f" || exit 1; done &&
               env POSIXLY_CORRECT=1 bash agent-setup.sh --help >/dev/null'
       - name: ruff
-        # Pinned by hash in .github/ruff-requirements.txt (issue #67 F20).
+        # Pinned by hash in .github/ruff-requirements.txt (issue cmeans/muse-field-kit#67 F20).
         run: |
           python3 -m venv "$RUNNER_TEMP/ruff"
           "$RUNNER_TEMP/ruff/bin/pip" install -q --require-hashes --only-binary=:all: -r .github/ruff-requirements.txt
           "$RUNNER_TEMP/ruff/bin/ruff" --version
-          "$RUNNER_TEMP/ruff/bin/ruff" check credential-lockbox/ .github/scripts/md-links.py
+          "$RUNNER_TEMP/ruff/bin/ruff" check . .github/scripts/md-links.py
       - name: The docs link the documents they name, and every relative link to a document works
         # md-links.py: in each section, the first mention of another .md in the
         # repo is a link; every relative .md link names a file and heading that
@@ -121,7 +121,7 @@ jobs:
         # of the dummy age identity, which is a published test vector.
         run: |
           sudo install -o root -g root -m 600 \
-            credential-lockbox/test/test-dummy-identity.txt "$RUNNER_TEMP/root-owned-key.txt"
+            test/test-dummy-identity.txt "$RUNNER_TEMP/root-owned-key.txt"
           echo "HANDOFF_TEST_OTHER_OWNER_KEY=$RUNNER_TEMP/root-owned-key.txt" >> "$GITHUB_ENV"
       - name: Key directories owned by another account and by root, for the key-directory checks
         # Each holds the runner's own 0600 copy of the dummy key: one in a
@@ -131,7 +131,7 @@ jobs:
           for d in other-owner-dir:nobody root-dir:root; do
             dir="$RUNNER_TEMP/${d%%:*}"
             sudo install -d -o "${d#*:}" -m 755 "$dir"
-            sudo install -o "$(id -u)" -g "$(id -g)" -m 600 credential-lockbox/test/test-dummy-identity.txt "$dir/id.txt"
+            sudo install -o "$(id -u)" -g "$(id -g)" -m 600 test/test-dummy-identity.txt "$dir/id.txt"
           done
           echo "HANDOFF_TEST_OTHER_OWNER_DIR=$RUNNER_TEMP/other-owner-dir" >> "$GITHUB_ENV"
           echo "HANDOFF_TEST_ROOT_DIR=$RUNNER_TEMP/root-dir" >> "$GITHUB_ENV"
@@ -143,8 +143,8 @@ jobs:
           age --version
           age-keygen --version
       - name: Add a Latin-1 locale
-        # run-test.sh's Latin-1 half of #75's test runs only where an
-        # ISO-8859-1 locale exists, and no runner has one (issue #79 item 1);
+        # run-test.sh's Latin-1 half of cmeans/muse-field-kit#75's test runs only where an
+        # ISO-8859-1 locale exists, and no runner has one (issue cmeans/muse-field-kit#79 item 1);
         # the apt-age step below checks that its ok line is there.
         run: |
           sudo localedef -i en_US -f ISO-8859-1 en_US.ISO-8859-1
@@ -154,7 +154,7 @@ jobs:
         # ALL INTEROP CHECKS PASSED. Also: every `if section` in run-test.sh is
         # in the list the check validates against.
         run: |
-          cd credential-lockbox/test
+          cd test
           for ids in "9z" "1a 9z" " "; do
             if out=$(HANDOFF_TEST_ONLY="$ids" ./run-test.sh 2>&1); then
               echo "run-test.sh passed with HANDOFF_TEST_ONLY='$ids'"
@@ -181,7 +181,7 @@ jobs:
         # tee's exit status would hide a failing suite.
         run: |
           set -o pipefail
-          ./credential-lockbox/test/run-test.sh | tee "$RUNNER_TEMP/run-test-apt.log"
+          ./test/run-test.sh | tee "$RUNNER_TEMP/run-test-apt.log"
           grep -qx 'ok (run mode passes UTF-8 bytes under a Latin-1 locale)' "$RUNNER_TEMP/run-test-apt.log" \
             || { echo "the Latin-1 locale check did not run"; exit 1; }
           if grep -E '^(skip:|n/a on this OS)' "$RUNNER_TEMP/run-test-apt.log"; then
@@ -194,7 +194,7 @@ jobs:
         # "n/a on this OS" and are expected here; a skip or FAIL is not.
         run: |
           set -o pipefail
-          pwsh -NoProfile -File credential-lockbox/test/run-test.ps1 2>&1 | tee "$RUNNER_TEMP/run-test-ps.log"
+          pwsh -NoProfile -File test/run-test.ps1 2>&1 | tee "$RUNNER_TEMP/run-test-ps.log"
           if grep -E '^(skip:|FAIL)' "$RUNNER_TEMP/run-test-ps.log"; then
             echo "a PowerShell check failed or was skipped"
             exit 1
@@ -216,7 +216,7 @@ jobs:
           export PATH="$HANDOFF_TEST_AGE_DIR:$PATH"
           export HANDOFF_TEST_AGE="$HANDOFF_TEST_AGE_DIR/age" HANDOFF_TEST_AGE_KEYGEN="$HANDOFF_TEST_AGE_DIR/age-keygen"
           command -v age
-          ./credential-lockbox/test/run-test.sh | tee "$RUNNER_TEMP/run-test-release.log"
+          ./test/run-test.sh | tee "$RUNNER_TEMP/run-test-release.log"
           grep -q "^age: .*$HANDOFF_TEST_AGE_DIR/age" "$RUNNER_TEMP/run-test-release.log" || { echo "the suite did not use the release binary"; exit 1; }
           if grep -E '^(skip:|n/a on this OS)' "$RUNNER_TEMP/run-test-release.log"; then
             echo "a check was skipped in CI"
@@ -246,7 +246,7 @@ jobs:
       - name: Assets are byte-identical to the tree, and the set is exactly five files
         run: |
           for f in agent-setup.sh consume.py handoff.ps1 handoff.sh; do
-            cmp "$RUNNER_TEMP/assets/$f" "credential-lockbox/$f"
+            cmp "$RUNNER_TEMP/assets/$f" "$f"
           done
           [ "$(cd "$RUNNER_TEMP/assets" && printf "%s\n" * | LC_ALL=C sort | tr '\n' ' ')" = "SHA256SUMS agent-setup.sh consume.py handoff.ps1 handoff.sh " ] \
             || { echo "unexpected asset set"; ls -l "$RUNNER_TEMP/assets"; exit 1; }
@@ -277,7 +277,7 @@ jobs:
         # markers, so a doc change that breaks it (or drops the markers)
         # fails here.
         run: |
-          block=$(.github/scripts/readme-block.sh credential-lockbox/INSTALL-linux-macos.md verify-macos-linux)
+          block=$(.github/scripts/readme-block.sh INSTALL-linux-macos.md verify-macos-linux)
           cmd=$(printf '%s\n' "$block" | grep '^sha256sum ' || true)
           [ -n "$cmd" ] || { echo "no sha256sum command in INSTALL-linux-macos.md's verify-macos-linux block"; exit 1; }
           echo "documented command: $cmd"
@@ -292,20 +292,20 @@ jobs:
         # version here, so a malformed heading fails CI before the tag.
         run: |
           for want in 0.1.0 0.2.0 0.2.1 0.3.0; do
-            v=$(.github/scripts/release-notes.sh "credential-lockbox-v$want" credential-lockbox/CHANGELOG.md "$RUNNER_TEMP/notes-real.md")
+            v=$(.github/scripts/release-notes.sh "v$want" CHANGELOG.md "$RUNNER_TEMP/notes-real.md")
             [ "$v" = "$want" ]
             [ -s "$RUNNER_TEMP/notes-real.md" ]
             if grep -q '^## ' "$RUNNER_TEMP/notes-real.md"; then echo "notes for $want run past the section"; exit 1; fi
           done
-          if .github/scripts/release-notes.sh credential-lockbox-v9.9.9 credential-lockbox/CHANGELOG.md "$RUNNER_TEMP/notes-none.md" 2>/dev/null; then
+          if .github/scripts/release-notes.sh v9.9.9 CHANGELOG.md "$RUNNER_TEMP/notes-none.md" 2>/dev/null; then
             echo "release-notes.sh accepted a version with no heading"
             exit 1
           fi
           [ ! -e "$RUNNER_TEMP/notes-none.md" ]
       - name: release-notes.sh on synthetic cases
         run: |
-          mkdir -p "$RUNNER_TEMP/demo-kit"
-          cl="$RUNNER_TEMP/demo-kit/CHANGELOG.md"
+          mkdir -p "$RUNNER_TEMP/demo"
+          cl="$RUNNER_TEMP/demo/CHANGELOG.md"
           {
             echo '# Changelog'
             echo
@@ -330,22 +330,20 @@ jobs:
           } > "$cl"
           rn=.github/scripts/release-notes.sh
           # Good tag, dated heading: the body runs through the ### subheading and stops at the next ##.
-          v=$($rn demo-kit-v0.1.0 "$cl" "$RUNNER_TEMP/n1.md")
+          v=$($rn v0.1.0 "$cl" "$RUNNER_TEMP/n1.md")
           [ "$v" = 0.1.0 ]
           grep -q '^first line$' "$RUNNER_TEMP/n1.md"
           grep -q '^### Added$' "$RUNNER_TEMP/n1.md"
           grep -q '^sub text$' "$RUNNER_TEMP/n1.md"
           if grep -Eq 'patch text|unreleased text' "$RUNNER_TEMP/n1.md"; then echo "notes leaked another section"; exit 1; fi
           # A heading with no suffix.
-          $rn demo-kit-v0.1.1 "$cl" "$RUNNER_TEMP/n2.md" > /dev/null
+          $rn v0.1.1 "$cl" "$RUNNER_TEMP/n2.md" > /dev/null
           [ "$(cat "$RUNNER_TEMP/n2.md")" = "patch text" ]
           # Failures write nothing: a prefix (0.1 vs 0.1.0), a missing heading,
-          # an empty section, bad tag shapes (the old repo-wide v0.1.0 form,
-          # a pre-release, no kit), and a tag for another kit than the
-          # CHANGELOG's folder.
-          for t in demo-kit-v0.1 demo-kit-v0.3.0 demo-kit-v0.2.0 v0.1.0 demo-kit-0.1.0 demo-kit-v0.1.0-rc1 \
-              demo-kit-v1.2 demo-kit-vx.y.z "demo-kit-v0.1.0 " -v0.1.0 Demo-kit-v0.1.0 demo--kit-v0.1.0 \
-              other-kit-v0.1.0 kit-v0.1.0; do
+          # an empty section, and bad tag shapes, including the KIT-vX.Y.Z
+          # form cmeans/muse-field-kit used before the move.
+          for t in v0.1 v0.3.0 v0.2.0 0.1.0 v0.1.0-rc1 v1.2 vx.y.z "v0.1.0 " " v0.1.0" -v0.1.0 V0.1.0 \
+              vv0.1.0 v0.1.0.0 credential-lockbox-v0.1.0 demo-kit-v0.1.0; do
             rm -f "$RUNNER_TEMP/nf.md"
             if $rn "$t" "$cl" "$RUNNER_TEMP/nf.md" 2>/dev/null; then
               echo "release-notes.sh accepted '$t'"
@@ -353,14 +351,6 @@ jobs:
             fi
             [ ! -e "$RUNNER_TEMP/nf.md" ] || { echo "release-notes.sh wrote notes for '$t'"; exit 1; }
           done
-          # A kit name with "-v" in it: the kit is everything before the last
-          # "-v" (release.yml takes it the same way, ${TAG%-v*}).
-          mkdir -p "$RUNNER_TEMP/demo-vault-kit"
-          cp "$cl" "$RUNNER_TEMP/demo-vault-kit/CHANGELOG.md"
-          v=$($rn demo-vault-kit-v0.1.1 "$RUNNER_TEMP/demo-vault-kit/CHANGELOG.md" "$RUNNER_TEMP/n3.md")
-          [ "$v" = 0.1.1 ] || { echo "demo-vault-kit-v0.1.1 gave version '$v'"; exit 1; }
-          tag=demo-vault-kit-v0.1.1
-          [ "${tag%-v*}" = demo-vault-kit ] || { echo "release.yml's kit expression gave '${tag%-v*}'"; exit 1; }
       - name: ci-ok-state.sh on stub check-run replies
         # release.yml refuses a tag whose commit's newest ci-ok check run
         # (from GitHub Actions) isn't a success.
@@ -401,16 +391,16 @@ jobs:
               fi
             done
           done
-          .github/scripts/readme-block.sh credential-lockbox/INSTALL-windows.md verify-windows > /dev/null
+          .github/scripts/readme-block.sh INSTALL-windows.md verify-windows > /dev/null
       - name: release-assets.sh refuses a tree with a missing script
         # A copy of the script in a tree that has the other three scripts but
         # not handoff.sh: exit status 1, and no output directory.
         run: |
           t="$RUNNER_TEMP/broken-tree"
-          mkdir -p "$t/.github/scripts" "$t/credential-lockbox"
+          mkdir -p "$t/.github/scripts"
           cp .github/scripts/release-assets.sh "$t/.github/scripts/"
           for f in agent-setup.sh consume.py handoff.ps1; do
-            cp "credential-lockbox/$f" "$t/credential-lockbox/"
+            cp "$f" "$t/"
           done
           rc=0
           "$t/.github/scripts/release-assets.sh" "$RUNNER_TEMP/broken-out" 2>"$RUNNER_TEMP/broken.err" || rc=$?
@@ -424,7 +414,7 @@ jobs:
         run: |
           mkdir "$RUNNER_TEMP/win-check"
           cp "$RUNNER_TEMP/assets/SHA256SUMS" "$RUNNER_TEMP/assets/handoff.ps1" "$RUNNER_TEMP/win-check/"
-          .github/scripts/readme-block.sh credential-lockbox/INSTALL-windows.md verify-windows > "$RUNNER_TEMP/win-check/verify-windows.ps1"
+          .github/scripts/readme-block.sh INSTALL-windows.md verify-windows > "$RUNNER_TEMP/win-check/verify-windows.ps1"
       - name: Upload the assets for the Windows job
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -450,7 +440,7 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           # An exact release, not "stable", so a new Go can't change this job
-          # unannounced (issue #67 F20).
+          # unannounced (issue cmeans/muse-field-kit#67 F20).
           go-version: 1.27.4
           cache: false
       - name: Build age ${{ matrix.age }}
@@ -487,7 +477,7 @@ jobs:
         run: |
           set -o pipefail
           export HANDOFF_TEST_ONLY="1a 1b 1c 1d 2a 2b 3a 4a 4b 5a 6 8"
-          ./credential-lockbox/test/run-test.sh | tee "$RUNNER_TEMP/run-test.log"
+          ./test/run-test.sh | tee "$RUNNER_TEMP/run-test.log"
           if ! grep -q "^age: .*$MATRIX_AGE" "$RUNNER_TEMP/run-test.log"; then
             echo "age --version does not show $MATRIX_AGE: the matrix did not test that version"
             exit 1
@@ -526,7 +516,7 @@ jobs:
               useradd -m t
               cp -r /w /home/t/w
               chown -R t /home/t/w
-              cd /home/t/w/credential-lockbox/test
+              cd /home/t/w/test
               su t -c "HANDOFF_TEST_ONLY=\"3a 3b 5b\" ./run-test.sh"' | tee "$RUNNER_TEMP/run-test-jq16.log"
           grep -qx 'jq-1.6' "$RUNNER_TEMP/run-test-jq16.log" || { echo "the container's jq is not 1.6"; exit 1; }
           grep -q '^ok (refused: payload case rawunitsep)$' "$RUNNER_TEMP/run-test-jq16.log" || { echo "the raw 0x1F payload case did not run"; exit 1; }
@@ -536,8 +526,8 @@ jobs:
           fi
 
   # The whole suite as root (uid 0), the way Muse's agent runs it: the other
-  # jobs run as a plain user, so a regression on root's paths (as #70's /tmp
-  # chmod advice was, fixed in #86) passed CI (issue #85). In a container
+  # jobs run as a plain user, so a regression on root's paths (as cmeans/muse-field-kit#70's /tmp
+  # chmod advice was, fixed in cmeans/muse-field-kit#86) passed CI (issue cmeans/muse-field-kit#85). In a container
   # pinned by digest. Three checks can't run as root and print the skip
   # lines listed below; any other skip or "n/a on this OS" line fails, as in
   # the other jobs.
@@ -560,7 +550,7 @@ jobs:
               apt-get install -y -qq age jq python3 openssl >/dev/null
               echo "uid: $(id -u)"; age --version; jq --version; python3 --version
               cp -r /w /root/w
-              cd /root/w/credential-lockbox/test
+              cd /root/w/test
               ./run-test.sh' | tee "$RUNNER_TEMP/run-test-root.log"
           grep -qx 'uid: 0' "$RUNNER_TEMP/run-test-root.log" || { echo "the suite did not run as root"; exit 1; }
           cat > "$RUNNER_TEMP/root-skips.txt" <<'EOF'
@@ -610,14 +600,14 @@ jobs:
       - name: A key file owned by another user, for the key-owner refusal
         run: |
           sudo install -o root -g wheel -m 600 \
-            credential-lockbox/test/test-dummy-identity.txt "$RUNNER_TEMP/root-owned-key.txt"
+            test/test-dummy-identity.txt "$RUNNER_TEMP/root-owned-key.txt"
           echo "HANDOFF_TEST_OTHER_OWNER_KEY=$RUNNER_TEMP/root-owned-key.txt" >> "$GITHUB_ENV"
       - name: Key directories owned by another account and by root, for the key-directory checks
         run: |
           for d in other-owner-dir:nobody root-dir:root; do
             dir="$RUNNER_TEMP/${d%%:*}"
             sudo install -d -o "${d#*:}" -m 755 "$dir"
-            sudo install -o "$(id -u)" -g "$(id -g)" -m 600 credential-lockbox/test/test-dummy-identity.txt "$dir/id.txt"
+            sudo install -o "$(id -u)" -g "$(id -g)" -m 600 test/test-dummy-identity.txt "$dir/id.txt"
           done
           echo "HANDOFF_TEST_OTHER_OWNER_DIR=$RUNNER_TEMP/other-owner-dir" >> "$GITHUB_ENV"
           echo "HANDOFF_TEST_ROOT_DIR=$RUNNER_TEMP/root-dir" >> "$GITHUB_ENV"
@@ -626,7 +616,7 @@ jobs:
         # /dev/shm, no setsid on macOS) are allowed and printed.
         run: |
           set -o pipefail
-          ./credential-lockbox/test/run-test.sh | tee "$RUNNER_TEMP/run-test.log"
+          ./test/run-test.sh | tee "$RUNNER_TEMP/run-test.log"
           grep '^n/a on this OS' "$RUNNER_TEMP/run-test.log" || true
           if grep '^skip:' "$RUNNER_TEMP/run-test.log"; then
             echo "a check was skipped in CI"
@@ -641,9 +631,9 @@ jobs:
           command -v sha256sum shasum || true
           .github/scripts/release-assets.sh "$RUNNER_TEMP/assets"
           for f in agent-setup.sh consume.py handoff.ps1 handoff.sh; do
-            cmp "$RUNNER_TEMP/assets/$f" "credential-lockbox/$f"
+            cmp "$RUNNER_TEMP/assets/$f" "$f"
           done
-          block=$(.github/scripts/readme-block.sh credential-lockbox/INSTALL-linux-macos.md verify-macos-linux)
+          block=$(.github/scripts/readme-block.sh INSTALL-linux-macos.md verify-macos-linux)
           cmd=$(printf '%s\n' "$block" | grep '^shasum -a 256 ' || true)
           [ -n "$cmd" ] || { echo "no shasum command in INSTALL-linux-macos.md's verify-macos-linux block"; exit 1; }
           echo "documented command: $cmd"
@@ -689,7 +679,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $exe = (Get-Process -Id $PID).Path
-          $script = Join-Path $PWD 'credential-lockbox\test\run-test.ps1'
+          $script = Join-Path $PWD 'test\run-test.ps1'
           $log = Join-Path $env:RUNNER_TEMP 'run-test-ps5.log'
           $p = Start-Process -FilePath $exe -ArgumentList @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', ('"' + $script + '"')) -NoNewWindow -Wait -PassThru -RedirectStandardOutput $log -RedirectStandardError "$log.err"
           Get-Content -LiteralPath $log
@@ -704,7 +694,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $exe = (Get-Process -Id $PID).Path
-          $script = Join-Path $PWD 'credential-lockbox\test\run-test.ps1'
+          $script = Join-Path $PWD 'test\run-test.ps1'
           $log = Join-Path $env:RUNNER_TEMP 'run-test-ps7.log'
           $p = Start-Process -FilePath $exe -ArgumentList @('-NoProfile', '-File', ('"' + $script + '"')) -NoNewWindow -Wait -PassThru -RedirectStandardOutput $log -RedirectStandardError "$log.err"
           Get-Content -LiteralPath $log
@@ -794,14 +784,14 @@ jobs:
       - name: consume.py opens the Windows blobs
         run: |
           find "$RUNNER_TEMP/windows-interop" -type f | sort | head -80
-          python3 -I credential-lockbox/test/check-interop.py \
+          python3 -I test/check-interop.py \
             "$RUNNER_TEMP/windows-interop/ps5" "$RUNNER_TEMP/windows-interop/ps7"
 
   # The one CI check main's ruleset requires besides QA Gate, once the
   # maintainer swaps it in (see the note at the top of jobs:). It passes
-  # only when every job it needs passed. Each kit's jobs
-  # cover the platforms that kit supports, so a Linux-only kit adds Linux
-  # jobs and the ruleset never changes. Add every new job to `needs` below:
+  # only when every job it needs passed. The jobs cover the platforms the
+  # scripts support, so a new platform adds jobs and the ruleset never
+  # changes. Add every new job to `needs` below:
   # a job missing from it fails ci-ok's last step, which names it. All the
   # gate's logic is in .github/scripts/ci-jobs.sh, which the self-test step
   # checks on every run.
@@ -906,7 +896,7 @@ jobs:
           if e=$("$s" check "$w" no-such-gate "$ok" 2>&1); then echo "::error::ci-jobs.sh check passed with a gate that isn't a job"; exit 1; fi
           printf '%s' "$e" | grep -q "no job named no-such-gate" || { echo "::error::ci-jobs.sh check with an unknown gate didn't say so"; exit 1; }
           # Ids that contain one another: the gate is matched whole, never as
-          # a substring (issue #62). A job named after the gate must still be
+          # a substring (issue cmeans/muse-field-kit#62). A job named after the gate must still be
           # gated, and a gate id that is only part of a job's id isn't a job.
           for x in "$GATE-zz" "zz-$GATE" "${GATE%?}" "${GATE%%-*}"; do
             if [ -n "$x" ] && printf '%s\n' "$base" | grep -qxF -- "$x"; then fx "$x is a real job id; pick other ids for the gate-substring cases"; fi

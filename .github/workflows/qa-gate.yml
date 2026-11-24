@@ -9,7 +9,7 @@ name: QA Gate
 # This status is not the merge gate: any workflow can post a "QA Gate" status
 # (the ruleset accepts any Actions run), and a label event in the minute after
 # a push, before pr-labels.yml removes QA Approved, re-reads the old approval.
-# The gate is main's ruleset (issue #67 F8): an approving review of the most
+# The gate is main's ruleset (issue cmeans/muse-field-kit#67 F8): an approving review of the most
 # recent push from an account with write access that neither opened the PR nor
 # made its last push. Today that is the maintainer's account (which the QA
 # sessions share), as long as it doesn't push to the PR itself: Dev's app opens
@@ -19,7 +19,7 @@ name: QA Gate
 # "QA Gate" (the status context) is a required check in main's ruleset: if it
 # is renamed, update the ruleset, or every PR waits on a check that never comes.
 #
-# pull_request_target, not pull_request (issue #67 F8): it always runs this
+# pull_request_target, not pull_request (issue cmeans/muse-field-kit#67 F8): it always runs this
 # file as it is on main, so a PR's edits to it can't change its own gate. A
 # change to this file takes effect only once it's on main. The trigger holds a
 # write token even for a PR's code, so this job must never check out or run
@@ -30,7 +30,7 @@ name: QA Gate
 #
 # Fork PRs are skipped (pull requests here are collaborators-only, and the
 # label workflows skip them too); the maintainer handles one by hand (issue
-# #124). The job is named post-qa-gate-status, not after the label: it is
+# cmeans/muse-field-kit#124). The job is named post-qa-gate-status, not after the label: it is
 # always green itself, and its name read like an approval next to a pending
 # QA Gate.
 on:

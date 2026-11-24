@@ -8,7 +8,7 @@ name: PR Label Automation
 # jobs couldn't label a fork's PR: each would fail with a 403 and show red.
 # Every job is skipped on a fork's PR instead (head repository != this one),
 # as qa-gate.yml is (for its own reason: pull requests here are
-# collaborators-only); the maintainer labels those by hand (issue #124).
+# collaborators-only); the maintainer labels those by hand (issue cmeans/muse-field-kit#124).
 on:
   pull_request:
     branches: [main]
@@ -24,7 +24,7 @@ jobs:
   # Approved for the current head (maintainer, 2026-11-21), so a verdict on
   # an older head must not carry over. A reopen runs it too: commits pushed
   # while a PR is closed may come with no synchronize event, and verdicts
-  # from before the close must not carry over to them (issue #135, as in
+  # from before the close must not carry over to them (issue cmeans/muse-field-kit#135, as in
   # cmeans/s3-blob-store#32). Dev Active stays (it coexists with Awaiting CI:
   # CI runs, but won't promote until Dev Active is removed).
   on-push:
@@ -128,7 +128,7 @@ jobs:
             fi
           done
           # Say what was found, so "still running" and "will never promote"
-          # can be told apart in the log (issue #124).
+          # can be told apart in the log (issue cmeans/muse-field-kit#124).
           echo "CI on $HEAD_SHA: ${CONCLUSION:-not finished, or no run found}"
           case "$CONCLUSION" in
             success)
