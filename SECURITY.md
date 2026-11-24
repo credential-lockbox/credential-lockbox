@@ -1,6 +1,6 @@
 # Security policy — Credential Lockbox
 
-This folder is a security pattern; flaws in it matter more than most bugs.
+This project is a security pattern; flaws in it matter more than most bugs.
 
 ## Reporting
 

@@ -67,6 +67,8 @@ The suite needs only what the scripts need: `bash`, `python3` 3.7 or later, the 
 
 Releases are tagged `vX.Y.Z`. Before the move here, releases were made in cmeans/muse-field-kit, as `credential-lockbox-v0.3.0`, and before the rename as `encrypted-credential-handoff-v0.2.1`, `v0.2.0` and `v0.1.0`. Those tags and releases stay there. Only a repository admin can create, move or delete a release tag (the repository's "release tags" ruleset). To release:
 
+For the first release in this repository, first run Release as a dry run on `main` (Actions, Release, "Run workflow" on `main`, `dry_run` true): it builds and checks the assets here before any tag exists.
+
 1. Merge a PR that turns the `## Unreleased` section into `## X.Y.Z — YYYY-MM-DD — <title>`, with the review sentences.
 2. Wait for `ci-ok` to pass on that merge commit on `main`.
 3. Tag it and push the tag: `git tag vX.Y.Z <commit>`, then `git push origin vX.Y.Z`.
@@ -75,6 +77,8 @@ Releases are tagged `vX.Y.Z`. Before the move here, releases were made in cmeans
 
 - **CI passed** (or a job failed on a flake, and re-running the failed jobs made it pass): run Release again on the tag (Actions, Release, "Run workflow" on the tag, `dry_run` false).
 - **CI failed for real, or never ran on that commit:** delete the tag (`git push --delete origin vX.Y.Z`), so no setup picks a version that has no release; fix `main`; and release the fix under a new version.
+
+If it refuses over the CHANGELOG heading (no `## X.Y.Z` section) or the tag's form (anything but `vX.Y.Z`): delete the tag (`git push --delete origin vX.Y.Z`), fix [`CHANGELOG.md`](CHANGELOG.md) on `main` by PR, wait for `ci-ok` on the merge, and tag again.
 
 If it refuses over the tag itself (it checks the tag before attesting and again right before creating the release):
 
