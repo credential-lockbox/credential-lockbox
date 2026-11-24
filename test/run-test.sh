@@ -69,7 +69,7 @@ cp test-dummy-identity.txt "$TMPKEY"
 chmod 600 "$TMPKEY"
 # fake_pem KIND prints a PEM-shaped text block with a made-up body: the tests of
 # 0.1.0 detection need a file that looks like a 0.1.0 key or public key, and
-# nothing in the kit parses one (only the BEGIN line is looked at), so no real
+# nothing here parses one (only the BEGIN line is looked at), so no real
 # key is made or kept. KIND is the label, e.g. "RSA PRIVATE KEY".
 fake_pem() {
   printf -- '-----BEGIN %s-----\nMIIBdummyDUMMYdummy0123456789+/abcdef\nDUMMYdummyDUMMYdummy0123456789+/ab==\n-----END %s-----\n' "$1" "$1"
