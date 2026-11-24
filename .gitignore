@@ -1,0 +1,9 @@
+# Never commit real keys or staged credentials, in any folder.
+*.pem
+*.key
+*priv
+secrets.*
+blob.txt
+__pycache__/
+# An age identity (the agent's private key), and copies of one beside it.
+handoff-identity.txt*

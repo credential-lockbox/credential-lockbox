@@ -1,0 +1,7 @@
+# ruff for ci.yml's lint step, pinned by hash (pip --require-hashes,
+# --only-binary): the manylinux x86_64 wheel that ubuntu-latest installs.
+# To upgrade, change the version and take the wheel's sha256 from
+# https://pypi.org/project/ruff/#files, and change the version in
+# CONTRIBUTING.md's local ruff command too.
+ruff==0.17.6 \
+    --hash=sha256:aa3b08254a732acba246891089a152c47c5733dc36b8ecb76ce8602f8326e5e4
