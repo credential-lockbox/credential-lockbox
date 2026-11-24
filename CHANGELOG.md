@@ -2,9 +2,16 @@
 
 ## Unreleased
 
+## 0.3.1 — 2026-11-24 — moved to credential-lockbox/credential-lockbox
+
+The first release from Credential Lockbox's own repository, [`credential-lockbox/credential-lockbox`](https://github.com/credential-lockbox/credential-lockbox). It moved there with its history from the `credential-lockbox/` folder of [`cmeans/muse-field-kit`](https://github.com/cmeans/muse-field-kit). The four scripts (`agent-setup.sh`, `consume.py`, `handoff.sh`, `handoff.ps1`) are byte-identical to 0.3.0's, so nothing changes for an install: the recipient, the keys and every stored blob stay as they are. 0.3.0 and the earlier releases, with their tags (`credential-lockbox-v0.3.0`, `encrypted-credential-handoff-v0.2.1`, `v0.2.0`, `v0.1.0`), stay in `cmeans/muse-field-kit`. So do the issues and pull requests that `CHANGELOG.md` cites for those releases: there, `#N` means `cmeans/muse-field-kit#N`. Releases here are tagged `vX.Y.Z`.
+
+This release's install pages, SETUP and SKILL still point to `cmeans/muse-field-kit` for downloads and clones, as 0.3.0 did. The next change re-points them here. The move went through Dev's pre-QA reviews and a QA round, was reviewed by Muse, and merged once the maintainer had applied `QA Approved`. Before release, Muse ran a live handoff against a fresh checkout of the moved tree: a dummy credential round-tripped with the production identity, its service binding matched, and the scripts were byte-identical to 0.3.0's. CI ran the whole suite on Linux, macOS and Windows on the moved tree.
+
 ### Changed
 
-- **STORES.md names a ready-made S3 deployment** (closes #138): [`cmeans/s3-blob-store`](https://github.com/cmeans/s3-blob-store), optional.
+- **Moved to its own repository** (#1): the history moved with it, and the commit messages link the field-kit issues and pull requests they cite. A root `LICENSE` (MIT) and `CONTRIBUTING.md`, with CI and the release workflow ported. Releases are tagged `vX.Y.Z`. `SECURITY.md`'s contact-request link and four documents' links to `CONTRIBUTING.md` work in the new layout.
+- **STORES.md names a ready-made S3 deployment** (closes cmeans/muse-field-kit#138): [`cmeans/s3-blob-store`](https://github.com/cmeans/s3-blob-store), optional.
 
 ## 0.3.0 — 2026-11-21 — renamed from encrypted-credential-handoff to Credential Lockbox
 
