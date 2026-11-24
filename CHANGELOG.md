@@ -2,9 +2,18 @@
 
 ## Unreleased
 
+## 0.3.1 — 2026-11-24 — moved to credential-lockbox/credential-lockbox
+
+The first release from Credential Lockbox's own repository, [`credential-lockbox/credential-lockbox`](https://github.com/credential-lockbox/credential-lockbox). It moved there with its history from the `credential-lockbox/` folder of [`cmeans/muse-field-kit`](https://github.com/cmeans/muse-field-kit). The four scripts (`agent-setup.sh`, `consume.py`, `handoff.sh`, `handoff.ps1`) are byte-identical to 0.3.0's, so an existing setup changes nothing: the recipient, the keys and every stored blob stay as they are. 0.3.0 and the earlier releases, with their tags (`credential-lockbox-v0.3.0`, `encrypted-credential-handoff-v0.2.1`, `v0.2.0`, `v0.1.0`), stay in `cmeans/muse-field-kit`. So do the issues and pull requests cited in the sections for 0.3.0 and earlier: there, `#N` means `cmeans/muse-field-kit#N`. From 0.3.1 on, `#N` means this repository's.
+
+This release's README, install pages, SETUP, SKILL, ROTATION and SECURITY.md still point to `cmeans/muse-field-kit`, as 0.3.0's did. Until the next change re-points them here, set up and download from `credential-lockbox-v0.3.0` in `cmeans/muse-field-kit`, as those pages say. Its files are this release's, and a setup on 0.3.0 keeps recording 0.3.0.
+
+The move went through Dev's pre-QA reviews and a QA round, was reviewed by Muse, and merged once the author had applied `QA Approved`. Before release, Muse ran a live handoff against a fresh checkout of the moved tree: a dummy credential round-tripped with the production identity, its service binding matched, and the scripts were byte-identical to 0.3.0's. CI ran the whole suite on Linux and macOS, and `handoff.ps1`'s tests on Windows, on the moved tree. Not run before tagging: the Release workflow itself had never published from this repository (a dry run on `main` comes first), and Muse's live check covered the agent's side, not a user's. As before, the reviewers were AI agent sessions in the author's setup, plus the author: peer review inside one shop, not a third-party audit.
+
 ### Changed
 
-- **STORES.md names a ready-made S3 deployment** (closes #138): [`cmeans/s3-blob-store`](https://github.com/cmeans/s3-blob-store), optional.
+- **Moved to its own repository** (#1): the history moved with it, and its commit messages link the field-kit issues and pull requests they cite. The repository has its own `LICENSE` (MIT), `CONTRIBUTING.md`, CI and release workflow, and releases are tagged `vX.Y.Z`. `SECURITY.md`'s contact-request link and four documents' links to `CONTRIBUTING.md` work in the new layout.
+- **STORES.md names a ready-made S3 deployment** (cmeans/muse-field-kit#143, closes cmeans/muse-field-kit#138): [`cmeans/s3-blob-store`](https://github.com/cmeans/s3-blob-store), optional.
 
 ## 0.3.0 — 2026-11-21 — renamed from encrypted-credential-handoff to Credential Lockbox
 
