@@ -4,21 +4,23 @@ This project is a security pattern; flaws in it matter more than most bugs.
 
 ## Supported versions
 
-Security fixes go into the latest release only: <https://github.com/credential-lockbox/credential-lockbox/releases/latest>. Older releases get no backports. This table is updated with each release.
+Security fixes go into the latest release only: <https://github.com/credential-lockbox/credential-lockbox/releases/latest>. Older releases get no backports. This section (the table and the upgrade notes) is updated with each release.
 
 | Version | Supported | Released as |
 | --- | --- | --- |
 | 0.3.2 (the latest release) | Yes | `v0.3.2`, from this repository |
 | 0.3.1 | No (same scripts as 0.3.2) | `v0.3.1`, from this repository |
 | 0.3.0 | No (same scripts as 0.3.2) | `credential-lockbox-v0.3.0`, from `cmeans/muse-field-kit` |
-| 0.2.x | No | `encrypted-credential-handoff-v0.2.1` and `v0.2.0`, from `cmeans/muse-field-kit` |
-| 0.1.x | No | `v0.1.0`, from `cmeans/muse-field-kit` |
+| 0.2.1 | No | `encrypted-credential-handoff-v0.2.1`, from `cmeans/muse-field-kit` |
+| 0.2.0 | No | `v0.2.0`, from `cmeans/muse-field-kit` |
+| 0.1.0 | No | `v0.1.0`, from `cmeans/muse-field-kit` |
 
 **What an upgrade involves:**
 
-- **From 0.3.0 or 0.3.1.** No new key, recipient or re-staging. 0.3.0's, 0.3.1's and 0.3.2's scripts are byte-identical, so a 0.3.0 or 0.3.1 install has nothing to fix today and keeps working where it is. Pointing an install's wrappers at a clone of this repository changes the helper's path, which [`SETUP.md`](SETUP.md) counts as a mechanism change: a written proposal, the user's approval and a fresh dummy round-trip. Make that change when a release changes a script, or earlier if you choose.
-- **From 0.2.x.** No new key. 0.3.0 renamed the folder and the skill ([`CHANGELOG.md`](CHANGELOG.md), 0.3.0), and `handoff.sh` and `consume.py` changed since 0.2.1. So the user downloads the latest release's script, the agent's recorded sums change (a mechanism change), and the skill is reinstalled as `credential-lockbox`.
-- **From 0.1.x.** Set up again: 0.2.0 replaced the cryptography (RSA through OpenSSL) with `age`.
+- **From 0.3.0 or 0.3.1.** No new key, recipient or re-staging. 0.3.0's, 0.3.1's and 0.3.2's scripts are byte-identical, so such an install has nothing to fix today. One still on a `cmeans/muse-field-kit` clone keeps working at its tag: field-kit's `main` no longer holds the scripts, so don't update that clone to `main`. Pointing its wrappers at a clone of this repository changes the helper's path, which [`SETUP.md`](SETUP.md) counts as a mechanism change: a written proposal, the user's approval and a fresh dummy round-trip. Make that change when a release changes a script, or earlier if you choose. Its installed skill can be reinstalled from this repository; that changes nothing that runs.
+- **From 0.2.1.** No new key. All four scripts changed in 0.3.0, which also renamed the folder and the skill ([`CHANGELOG.md`](CHANGELOG.md), 0.3.0). So the user downloads their platform's script (`handoff.sh` or `handoff.ps1`) from the latest release, the agent's recorded sums change (a mechanism change), and the skill is reinstalled as `credential-lockbox`.
+- **From 0.2.0.** Everything for 0.2.1, and first check each wrapper and the key folder against 0.2.1's new refusals (CHANGELOG, 0.2.1): `consume.py` refuses an `--env` target that isn't a credential variable's name (#78), and a key folder owned by another account (not this one or root), or that a group or others can write to (#86). Changing a wrapper or moving the key is a mechanism change too.
+- **From 0.1.0.** Set up again: 0.2.0 replaced the cryptography (RSA through OpenSSL) with `age`.
 
 ## Reporting
 

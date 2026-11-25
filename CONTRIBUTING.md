@@ -69,7 +69,7 @@ Releases are tagged `vX.Y.Z`. Before the move here, releases were made in cmeans
 
 For the first release in this repository, first run Release as a dry run on `main` (Actions, Release, "Run workflow" on `main`, `dry_run` true): it builds and checks the assets here before any tag exists.
 
-1. Merge a PR that turns the `## Unreleased` section into `## X.Y.Z — YYYY-MM-DD — <title>`, with the review sentences, and updates the table in [`SECURITY.md`](SECURITY.md)'s Supported versions section.
+1. Merge a PR that turns the `## Unreleased` section into `## X.Y.Z — YYYY-MM-DD — <title>`, with the review sentences, updates [`SECURITY.md`](SECURITY.md)'s Supported versions section (the table and the upgrade notes), and adds the version to `ci.yml`'s real-CHANGELOG release-notes check.
 2. Wait for `ci-ok` to pass on that merge commit on `main`.
 3. Tag it and push the tag: `git tag vX.Y.Z <commit>`, then `git push origin vX.Y.Z`.
 

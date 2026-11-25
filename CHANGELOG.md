@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-### Changed
+### Added
 
-- **SECURITY.md says which versions get security fixes** (#19, closes #18): the latest release only, with a row for each earlier release and what upgrading from it involves. Reports about the releases made in `cmeans/muse-field-kit` come here. CONTRIBUTING's release steps update the table.
+- **SECURITY.md says which versions get security fixes** (#19, closes #18): the latest release only, with every release listed and what upgrading from each involves. Reports about the releases made in `cmeans/muse-field-kit` come here. CONTRIBUTING's release step updates the section and `ci.yml`'s release-notes list.
 
 ## 0.3.2 — 2026-11-24 — the docs point here
 
