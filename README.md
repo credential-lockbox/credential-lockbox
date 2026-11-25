@@ -1,6 +1,6 @@
 # Credential Lockbox
 
-[![Release](https://img.shields.io/github/v/release/cmeans/muse-field-kit?filter=credential-lockbox-*)](https://github.com/cmeans/muse-field-kit/releases?q=credential-lockbox&expanded=true)
+[![Release](https://img.shields.io/github/v/release/credential-lockbox/credential-lockbox)](https://github.com/credential-lockbox/credential-lockbox/releases)
 
 Hand your Muse a service credential **without the plaintext ever entering the chat**. Muse keeps it encrypted and decrypts it only at the moment a tool uses it; nothing in the design shows it back, to Muse or to you.
 
@@ -24,7 +24,7 @@ https://github.com/user-attachments/assets/24c636e7-4f44-41fe-8164-1915014d5aec
 
 **Set it up:**
 
-> Set up the Credential Lockbox from https://github.com/cmeans/muse-field-kit (folder `credential-lockbox`): clone it and work from the clone. Also install that folder as one of your skills, so its SKILL.md brings you back to the clone for later requests; run nothing from the installed copy. Read README.md, then follow SETUP.md exactly. Use the scripts verbatim during setup; do not improvise the mechanism or write any decrypted value to disk. If you spot an improvement, propose it to me separately rather than applying it mid-setup. Tell me which release to download my script from and the commands for my platform, then give me your recipient to save as handoff-muse.age beside my copy of the script, computed from your identity file, and wait: I will run my script's setup check, tell you its result, and confirm the recipient my copy prints matches yours before we test with a dummy credential.
+> Set up the Credential Lockbox from https://github.com/credential-lockbox/credential-lockbox: clone it and work from the clone. Also install the clone as one of your skills, so its SKILL.md brings you back to the clone for later requests; run nothing from the installed copy. Read README.md, then follow SETUP.md exactly. Use the scripts verbatim during setup; do not improvise the mechanism or write any decrypted value to disk. If you spot an improvement, propose it to me separately rather than applying it mid-setup. Tell me which release to download my script from and the commands for my platform, then give me your recipient to save as handoff-muse.age beside my copy of the script, computed from your identity file, and wait: I will run my script's setup check, tell you its result, and confirm the recipient my copy prints matches yours before we test with a dummy credential.
 
 **Stage a new credential (once set up):**
 

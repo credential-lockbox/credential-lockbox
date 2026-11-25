@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.3.2 — 2026-11-24 — the docs point here
+
+A documentation release: the scripts are byte-identical to 0.3.1's and 0.3.0's, so an existing setup changes nothing. 0.3.1's pages still pointed to `cmeans/muse-field-kit`, and SETUP has an agent follow the docs of the release it checks out, so a new setup from this repository needs a release that carries the new pages: this one. From this release on, set up and download from this repository. The change went through Dev's pre-QA review and a QA round, and was reviewed by Muse, and merged once the author had applied `QA Approved`; its install and verify commands were run against the published v0.3.1 assets, whose bytes this release repeats. Not run before tagging: this release's own assets and attestations, and a live handoff. As before, the reviewers were AI agent sessions in the author's setup, plus the author: peer review inside one shop, not a third-party audit.
+
+### Changed
+
+- **The docs point to this repository and its `vX.Y.Z` releases** (#4): the README's release badge (it showed field-kit's `credential-lockbox-v0.3.0`) and setup prompt, the INSTALL pages' download, attestation and clone lines, SETUP's release step (it finds `vX.Y.Z` tags and checks sums and attestations here), SKILL's source and clone lines, SECURITY.md's advisory form, and the example `consume.py` path. Releases through 0.3.0 stay in `cmeans/muse-field-kit`; the INSTALL pages say how to fetch one.
+
 ## 0.3.1 — 2026-11-24 — moved to credential-lockbox/credential-lockbox
 
 The first release from Credential Lockbox's own repository, [`credential-lockbox/credential-lockbox`](https://github.com/credential-lockbox/credential-lockbox). It moved there with its history from the `credential-lockbox/` folder of [`cmeans/muse-field-kit`](https://github.com/cmeans/muse-field-kit). The four scripts (`agent-setup.sh`, `consume.py`, `handoff.sh`, `handoff.ps1`) are byte-identical to 0.3.0's, so an existing setup changes nothing: the recipient, the keys and every stored blob stay as they are. 0.3.0 and the earlier releases, with their tags (`credential-lockbox-v0.3.0`, `encrypted-credential-handoff-v0.2.1`, `v0.2.0`, `v0.1.0`), stay in `cmeans/muse-field-kit`. So do the issues and pull requests cited in the sections for 0.3.0 and earlier: there, `#N` means `cmeans/muse-field-kit#N`. From 0.3.1 on, `#N` means this repository's.

@@ -5,7 +5,7 @@ description: "Use when the user wants to give you a password, token, API key or 
 
 # Credential Lockbox
 
-Community skill, not an official Muse feature. Source (MIT): https://github.com/cmeans/muse-field-kit/tree/main/credential-lockbox
+Community skill, not an official Muse feature. Source (MIT): https://github.com/credential-lockbox/credential-lockbox
 
 The user encrypts a small JSON payload on their own machine with `handoff.sh` (`handoff.ps1` on Windows), using `age`, and pastes the ciphertext to you. The private key that opens it lives only on your machine. At use time, the label's recorded wrapper hands the ciphertext to `consume.py`, which decrypts it in memory, checks its `svc` against the label, and replaces itself with the label's tool, the values in its environment. You never see the plaintext.
 
@@ -18,7 +18,7 @@ Not for website sign-in: the browser's own credential flow handles that, and thi
 ## Before anything
 
 - Check your notes for a handoff that's already set up (`SETUP.md` step 8 says what they hold). If there is one, work from the folder your notes and the recorded sums point to; don't clone or set up again.
-- If there's none, clone the repository: `git clone https://github.com/cmeans/muse-field-kit`, then work in its `credential-lockbox` folder.
+- If there's none, clone the repository: `git clone https://github.com/credential-lockbox/credential-lockbox`, then work in the clone.
 - Use nothing that sits beside this file: read, run and hand over only the clone's files (`SETUP.md`, the hard rule "Installed as a skill").
 - Read what "What to read, and when" (below) lists for what you're doing, from the clone, before the first step.
 - If your notes say `host may be compromised` for this host, don't stage, rotate, rewrap or retire on it: tell the user that your notes mark this host as possibly compromised (since <date>), that the handoff is set up again from scratch on a clean host, and that they can clear the mark by telling you, in a direct conversational turn, that this is a different, clean host or that they judge this one was never compromised (`ROTATION.md`, Compromise). If a blob was already pasted, tell them that credential counts as exposed, so they change it at its service again. Then stop.
