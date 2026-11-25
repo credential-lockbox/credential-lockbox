@@ -4,7 +4,7 @@
 
 ### Changed
 
-- **SECURITY.md says which versions get security fixes** (#19, closes #18): the latest release only. 0.3.0 and older, released from `cmeans/muse-field-kit`, get no fixes.
+- **SECURITY.md says which versions get security fixes** (#19, closes #18): the latest release only, with a row for each earlier release and what upgrading from it involves. Reports about the releases made in `cmeans/muse-field-kit` come here. CONTRIBUTING's release steps update the table.
 
 ## 0.3.2 — 2026-11-24 — the docs point here
 
