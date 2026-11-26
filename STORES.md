@@ -102,6 +102,6 @@ A connected service's call can bring up an approval for the user, with **Allow**
 - **Allow:** approves this one call. A later call would ask again, so an unattended fetch, with no one there to approve it, would wait and fail: if a wrapper's fetch hangs or times out with no error from the store, look for a pending approval.
 - **Allow Always, on a store used only for the blobs:** what makes unattended fetch work. It is standing access to ciphertext only, with the key elsewhere.
 - **Allow Always, on a whole-account connection** (Drive, Dropbox, Notion): standing access to the whole account, not only the blob file.
-- **Allow Always over writes, replaces and deletes:** those then proceed without anyone approving them too. Staging and rotation run with the user present, so they can use Allow.
+- **Allow Always over writes, replaces and deletes:** those then proceed without anyone approving them too. Staging and rotation run with the user present, so they can use Allow. With the app's Save, `delete-pending` also runs in the expiry sweep at the start of a session, possibly with nobody present: without a standing approval for its delete, the sweep waits and fails, and expired items stay until the next tell-Muse turn.
 
 Not yet verified on Muse: exactly what Allow Always covers (the service, the tool, or the kind of call), how long it lasts, and where to review or revoke it. Treat it as standing until you've checked.

@@ -143,16 +143,19 @@ Score each item pass, partial, or fail, and give the evidence for each score: th
    a dummy whose blob is about 2,700 characters (a `password` of
    about 1,800 `x`s typed or pasted into the app): the store may
    split or wrap a longer blob, and the code must still match. Did
-   the Save leave a copy
+   the Save leave a copy (a 64,000-character Save isn't asked for here:
+   check 4 covers that size for the store, not for the app's write)
    anywhere on your machine, the app's own storage included? Does
-   `delete-pending` remove it, and do `fetch-pending` and
-   `delete-pending` refuse a label slot's id?
+   `delete-pending` remove it? Store a dummy blob under the label
+   `store-test` itself (check 3's way): do `fetch-pending` and
+   `delete-pending` refuse that label slot's id? Does a new Save show
+   in `list-pending` at once, or only after a delay (how long)?
 
 Also say where a fetched blob lands on your side (in memory, or in a file, and on which disk), and remove any file copy when you are done. A synced or cached local copy counts as a local copy.
 
 ## Clean up
 
-Delete every item, file, and temp copy this test made, in the store and on your machine, including the temp folder with the identity copy in it (`rm -rf "$T"`, or in PowerShell `Remove-Item -Recurse -Force $TempDir`). Then check the scratch location once more and confirm in the scorecard that nothing is left.
+Delete every item, file, and temp copy this test made, in the store and on your machine, including the temp folder with the identity copy in it (`rm -rf "$T"`, or in PowerShell `Remove-Item -Recurse -Force $TempDir`). Then check the scratch location once more and confirm in the scorecard that nothing is left. If you ran check 8, also delete the throwaway app build it used: it encrypts to the test recipient, whose private key is public in this repository, so it must never be left where it could be taken for the user's app.
 
 ## Scorecard
 

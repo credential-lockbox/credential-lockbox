@@ -6,11 +6,11 @@ A documentation release: the scripts are byte-identical to 0.4.0's, so a setup w
 
 ### Added
 
-- **The store contract for the app's Save** (#PR): with the app as your side, its Save writes to a pending area of the store you chose, and your Muse moves the blob into the label's slot only when the code you give it matches, then deletes the pending item. An unclaimed Save expires (24 hours unless you choose otherwise). `SETUP.md`, "The app as the user's side", item 10, has the rules, and STORE-TEST's new check 8 tests a store for it.
+- **The store contract for the app's Save** (#24): with the app as your side, its Save writes to a pending area of the store you chose, and your Muse moves the blob into the label's slot only when the code you give it matches, then deletes the pending item. An unclaimed Save expires (24 hours unless you choose otherwise). `SETUP.md`, "The app as the user's side", item 10, has the rules, and STORE-TEST's new check 8 tests a store for it.
 
 ### Changed
 
-- **After a rotation, wait for the new key's confirmation** (#PR, closes #22): `ROTATION.md` step 3 tells you not to encrypt a real credential to the new key until your Muse has confirmed your new copy with you.
+- **After a rotation, wait for the new key's confirmation** (#24, closes #22): `ROTATION.md` step 3 tells you not to encrypt a real credential to the new key until your Muse has confirmed your new copy with you.
 
 ## 0.4.0 — 2026-11-25 — the app as an optional user side
 
