@@ -1,6 +1,6 @@
 # Test a new store for the Credential Lockbox
 
-Use this prompt to test a remote store that [`STORES.md`](STORES.md) doesn't list as tested. Give the whole prompt to your agent, and name the store you want tested where it says `[store]`.
+Use this prompt to test a remote store that [`STORES.md`](STORES.md) doesn't list as tested, or, with check 8, a store that will back the credential-lockbox-muse app's Save, listed or not. Give the whole prompt to your agent, and name the store you want tested where it says `[store]`.
 
 ---
 
@@ -126,11 +126,40 @@ Score each item pass, partial, or fail, and give the evidence for each score: th
    an account of its own or space shared with my other data. If
    there is no free tier, give the lowest paid price.
 
+8. **The app's write path** (only if the store will back the
+   credential-lockbox-muse app's Save; this check applies to the
+   stores [`STORES.md`](STORES.md) lists as well). Use a throwaway build of the
+   app, given the test recipient in `test/handoff-test.age` as its
+   key, and the `list-pending`, `fetch-pending` and `delete-pending`
+   programs written for this test ([`SETUP.md`](SETUP.md), "The app
+   as the user's side", item 10), which are in scope here. In the app, encrypt the
+   dummy payload `{"svc":"store-test","password":"test"}` and Save it
+   into the pending area recorded for `store-test`. Then:
+   does it appear in your own `list-pending` output for `store-test`,
+   with the store's id and an arrival time? Fetch it with
+   `fetch-pending` and run the check above on it (`svc` must match;
+   the password length is the one you typed): does it pass, and
+   does the code you compute match the app's Receipt? Compute it as
+   SETUP's item 10 does, `LC_ALL=C tr -d '[:space:]' < <file> |
+   sha256sum | cut -c1-16`: hashing the file as fetched counts its
+   newline and gives another code. Do the two Saves have different
+   deposit ids? Repeat it with
+   a dummy whose blob is about 2,700 characters (a `password` of
+   about 1,800 `x`s typed or pasted into the app): the store may
+   split or wrap a longer blob, and the code must still match. Did
+   the Save leave a copy (a 64,000-character Save isn't asked for here:
+   check 4 covers that size for the store, not for the app's write)
+   anywhere on your machine, the app's own storage included? Does
+   `delete-pending` remove it? Store a dummy blob under the label
+   `store-test` itself (check 3's way): do `fetch-pending` and
+   `delete-pending` refuse that label slot's id? Does a new Save show
+   in `list-pending` at once, or only after a delay (how long)?
+
 Also say where a fetched blob lands on your side (in memory, or in a file, and on which disk), and remove any file copy when you are done. A synced or cached local copy counts as a local copy.
 
 ## Clean up
 
-Delete every item, file, and temp copy this test made, in the store and on your machine, including the temp folder with the identity copy in it (`rm -rf "$T"`, or in PowerShell `Remove-Item -Recurse -Force $TempDir`). Then check the scratch location once more and confirm in the scorecard that nothing is left.
+Delete every item, file, and temp copy this test made, in the store and on your machine, including the temp folder with the identity copy in it (`rm -rf "$T"`, or in PowerShell `Remove-Item -Recurse -Force $TempDir`). Then check the scratch location once more and confirm in the scorecard that nothing is left. If you ran check 8, also delete the throwaway app build it used: it encrypts to the test recipient, whose private key is public in this repository, so it must never be left where it could be taken for the user's app.
 
 ## Scorecard
 
@@ -145,6 +174,7 @@ End with exactly this table, filled in, and the verdict line:
 | History after delete | | |
 | Store credential scope | | |
 | Limits and cost | | |
+| App write path (or "not tested") | | |
 
 Store: / Date: / Agent and platform:
 Cleaned up: yes or no

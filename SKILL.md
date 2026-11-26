@@ -36,7 +36,7 @@ Read by phase, from the clone's folder. Each row adds to the first; none replace
 | Choosing a store, or checking one again | `STORES.md`. |
 | A rotation or a compromise response: the user asks for one, says the key may have leaked, or your notes record one under way; `<key path>.previous` or `.previous.previous` exists beside the key; or a message or note names `ROTATION.md`, or "Rotation" beside `SETUP.md` or SETUP (an older pointer, such as "SETUP.md Rotation step 3") | `ROTATION.md`, all of it, before you run anything else for the handoff; and the staging row's `SETUP.md` steps 6 to 8, which rotation uses. |
 | The user's side: installing `age`, getting the scripts, their platform | `README.md` "Installing age", "Getting the scripts" and "Platform", and the user's own INSTALL page. |
-| The user's side is the app, or they ask about it; a delivery to the app; a blob or a code from the app | `SETUP.md` "The app as the user's side", all of it, and credential-lockbox-muse's `SETUP.md` at the commit or tag your notes record. |
+| The user's side is the app, or they ask about it; a delivery to the app; a blob or a code from the app | `SETUP.md` "The app as the user's side", all of it (item 10 for a Save: the store contract, the pending area and the staging steps), and credential-lockbox-muse's `SETUP.md` at the commit or tag your notes record. |
 
 If the phase changes partway through (a routine staging turns into a suspected leak, say), stop and read the new row's files before the next step. If in doubt whether a row applies, read it.
 
