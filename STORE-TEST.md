@@ -1,6 +1,6 @@
 # Test a new store for the Credential Lockbox
 
-Use this prompt to test a remote store that [`STORES.md`](STORES.md) doesn't list as tested. Give the whole prompt to your agent, and name the store you want tested where it says `[store]`.
+Use this prompt to test a remote store that [`STORES.md`](STORES.md) doesn't list as tested, or, with check 8, a store that will back the credential-lockbox-muse app's Save, listed or not. Give the whole prompt to your agent, and name the store you want tested where it says `[store]`.
 
 ---
 
@@ -127,15 +127,24 @@ Score each item pass, partial, or fail, and give the evidence for each score: th
    there is no free tier, give the lowest paid price.
 
 8. **The app's write path** (only if the store will back the
-   credential-lockbox-muse app's Save, and only with a throwaway build
-   of the app and its test recipient). Save the 400-character blob from
-   the app into the pending area recorded for `store-test`. Then:
+   credential-lockbox-muse app's Save; this check applies to the
+   stores [`STORES.md`](STORES.md) lists as well). Use a throwaway build of the
+   app, given the test recipient in `test/handoff-test.age` as its
+   key, and the `list-pending`, `fetch-pending` and `delete-pending`
+   programs written for this test ([`SETUP.md`](SETUP.md), "The app
+   as the user's side", item 10), which are in scope here. In the app, encrypt the
+   dummy payload `{"svc":"store-test","password":"test"}` and Save it
+   into the pending area recorded for `store-test`. Then:
    does it appear in your own `list-pending` output for `store-test`,
-   with an arrival time? Does the code you compute from it match the
-   app's Receipt? Does a second create under the same pending name fail
-   rather than replace? Did the Save leave a copy anywhere on your
-   machine, the app's own storage included? Does `delete-pending`
-   remove it, and does it refuse a label slot's name?
+   with the store's id and an arrival time? Fetch it with
+   `fetch-pending` and run the check above on it: does it pass, and
+   does the code you compute match the app's Receipt? What does a
+   second create under the same pending name do: fail, replace, or
+   make a second item? (Any of the three is recorded; a store that
+   makes a second item is addressed by id.) Did the Save leave a copy
+   anywhere on your machine, the app's own storage included? Does
+   `delete-pending` remove it, and do `fetch-pending` and
+   `delete-pending` refuse a label slot's id?
 
 Also say where a fetched blob lands on your side (in memory, or in a file, and on which disk), and remove any file copy when you are done. A synced or cached local copy counts as a local copy.
 
