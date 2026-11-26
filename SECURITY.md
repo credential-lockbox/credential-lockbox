@@ -8,16 +8,18 @@ Security fixes go into the latest release only: <https://github.com/credential-l
 
 | Version | Supported | Released as |
 | --- | --- | --- |
-| 0.3.2 (the latest release) | Yes | `v0.3.2`, from this repository |
-| 0.3.1 | No (same scripts as 0.3.2) | `v0.3.1`, from this repository |
-| 0.3.0 | No (same scripts as 0.3.2) | `credential-lockbox-v0.3.0`, from `cmeans/muse-field-kit` |
+| 0.4.0 (the latest release) | Yes | `v0.4.0`, from this repository |
+| 0.3.2 | No (same scripts as 0.4.0) | `v0.3.2`, from this repository |
+| 0.3.1 | No (same scripts as 0.4.0) | `v0.3.1`, from this repository |
+| 0.3.0 | No (same scripts as 0.4.0) | `credential-lockbox-v0.3.0`, from `cmeans/muse-field-kit` |
 | 0.2.1 | No | `encrypted-credential-handoff-v0.2.1`, from `cmeans/muse-field-kit` |
 | 0.2.0 | No | `v0.2.0`, from `cmeans/muse-field-kit` |
 | 0.1.0 | No | `v0.1.0`, from `cmeans/muse-field-kit` |
 
 **What an upgrade involves:**
 
-- **From 0.3.0 or 0.3.1.** No new key, recipient or re-staging. 0.3.0's, 0.3.1's and 0.3.2's scripts are byte-identical, so such an install has nothing to fix today. One still on a `cmeans/muse-field-kit` clone keeps working at its tag: field-kit's `main` no longer holds the scripts, so don't update that clone to `main`. Pointing its wrappers at a clone of this repository changes the helper's path, which [`SETUP.md`](SETUP.md) counts as a mechanism change: a written proposal, the user's approval and a fresh dummy round-trip. Make that change when a release changes a script, or earlier if you choose. Its installed skill can be reinstalled from this repository; that changes nothing that runs.
+- **From 0.3.2.** Nothing changes for a setup with the script as the user's side: the scripts are byte-identical, and 0.4.0 changes only the instructions, adding the app as an optional user side ([`CHANGELOG.md`](CHANGELOG.md), 0.4.0). An app setup made under 0.3.2 as a mechanism change of its own can now follow [`SETUP.md`](SETUP.md)'s "The app as the user's side": check it against that section, record what it asks for, and keep the core's step 4 comparison in chat.
+- **From 0.3.0 or 0.3.1.** No new key, recipient or re-staging. 0.3.0's, 0.3.1's, 0.3.2's and 0.4.0's scripts are byte-identical, so such an install has nothing to fix today. One still on a `cmeans/muse-field-kit` clone keeps working at its tag: field-kit's `main` no longer holds the scripts, so don't update that clone to `main`. Pointing its wrappers at a clone of this repository changes the helper's path, which [`SETUP.md`](SETUP.md) counts as a mechanism change: a written proposal, the user's approval and a fresh dummy round-trip. Make that change when a release changes a script, or earlier if you choose. Its installed skill can be reinstalled from this repository; that changes nothing that runs.
 - **From 0.2.1.** No new key. All four scripts changed in 0.3.0, which also renamed the folder and the skill ([`CHANGELOG.md`](CHANGELOG.md), 0.3.0). So the user downloads their platform's script (`handoff.sh` or `handoff.ps1`) from the latest release, the agent's recorded sums change (a mechanism change), and the skill is reinstalled as `credential-lockbox`.
 - **From 0.2.0.** Everything for 0.2.1, and first check each wrapper and the key folder against 0.2.1's new refusals (CHANGELOG, 0.2.1): `consume.py` refuses an `--env` target that isn't a credential variable's name (#78), and a key folder owned by another account (not this one or root), or that a group or others can write to (#86). Changing a wrapper or moving the key is a mechanism change too.
 - **From 0.1.0.** Set up again: 0.2.0 replaced the cryptography (RSA through OpenSSL) with `age`.

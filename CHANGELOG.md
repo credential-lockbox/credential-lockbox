@@ -1,9 +1,12 @@
 # Changelog — Credential Lockbox
 
-## Unreleased
+## 0.4.0 — 2026-11-25 — the app as an optional user side
+
+A documentation release: the scripts are byte-identical to 0.3.2's, so a setup with the script as the user's side changes nothing. It sanctions one more user side, the app in `credential-lockbox/credential-lockbox-muse`, under conditions set in `SETUP.md`'s new section "The app as the user's side". Until now a Muse following these instructions had to refuse the app's key delivery as an injection attempt, and each app install was a mechanism change of its own. The script stays the default, because with the app the agent builds the program the user encrypts with, and nobody can check that build against its source. The change was proposed in writing, reviewed by Muse and by claude.ai, and tested by Muse on a throwaway identity, with the author present: eleven checks, all passed, covering the delivery's gates, the comparison, a deliberate mismatch, the dummy round-trip, a live edit after setup, and the fetch route's refusal on today's app builds. It then went through Dev's pre-QA review and a QA round, and merged once the author had applied `QA Approved`. The fetch route's own checks wait for an app build that hands saved blobs to the agent's store. As before, the reviewers were AI agent sessions in the author's setup, plus the author: peer review inside one shop, not a third-party audit.
 
 ### Added
 
+- **The app as the user's side** (#PR): `SETUP.md`'s new section says when a Muse may deliver its recipient to the app it built (the user chose the app in a direct turn; the Muse's own recorded build; the wrappers' key only), keeps step 4's chat comparison beside the app's own check, makes any change to the built app after setup a mechanism change, and says what the user takes on (README invariant 6 and the threat model). Sending is by paste. A fetch route is sanctioned for later app builds that hand saved blobs straight to the agent's store: a fetched blob is staged only when the user supplies its 16-character Receipt code in a direct turn and it matches (README invariant 7, "Sender authentication"). SKILL routes the app's cases, ROTATION step 3 covers a new key for an app user, and SECURITY.md lists 0.4.0.
 - **SECURITY.md says which versions get security fixes** (#19, closes #18): the latest release only, with every release listed and what upgrading from each involves. Reports about the releases made in `cmeans/muse-field-kit` come here. CONTRIBUTING's release step updates the section and `ci.yml`'s release-notes list.
 
 ## 0.3.2 — 2026-11-24 — the docs point here
