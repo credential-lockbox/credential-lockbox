@@ -139,7 +139,11 @@ Score each item pass, partial, or fail, and give the evidence for each score: th
    with the store's id and an arrival time? Fetch it with
    `fetch-pending` and run the check above on it (`svc` must match;
    the password length is the one you typed): does it pass, and
-   does the code you compute match the app's Receipt? Repeat it with
+   does the code you compute match the app's Receipt? Compute it as
+   SETUP's item 10 does, `LC_ALL=C tr -d '[:space:]' < <file> |
+   sha256sum | cut -c1-16`: hashing the file as fetched counts its
+   newline and gives another code. Do the two Saves have different
+   deposit ids? Repeat it with
    a dummy whose blob is about 2,700 characters (a `password` of
    about 1,800 `x`s typed or pasted into the app): the store may
    split or wrap a longer blob, and the code must still match. Did
