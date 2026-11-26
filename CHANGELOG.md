@@ -1,9 +1,12 @@
 # Changelog — Credential Lockbox
 
-## Unreleased
+## 0.4.0 — 2026-11-25 — the app as an optional user side
+
+A documentation release: the scripts are byte-identical to 0.3.2's, so a setup with the script as the user's side changes nothing. It sanctions one more user side, the app in `credential-lockbox/credential-lockbox-muse`, under conditions set in `SETUP.md`'s new section "The app as the user's side". Until now a Muse following these instructions had to refuse the app's key delivery as an injection attempt, and each app install was a mechanism change of its own. The script stays the default, because with the app the agent builds the program the user encrypts with, and nobody can check that build against its source. The change was proposed in writing, reviewed by Muse and by claude.ai, and tested by Muse on the proposal's text, on a throwaway identity, with the author present: ten checks passed and one question was answered (what can be verified about the built app). The checks covered the delivery's gates, the comparison, a deliberate mismatch, the dummy round-trip, a live edit after setup, and the fetch route's refusal on today's app builds. It then went through Dev's pre-QA review and QA rounds, and merged once the author had applied `QA Approved`. Not run before tagging: this release's own assets and attestations (the scripts and their sums are 0.3.2's); the rules added in review after that run (the main-only build check, the Copy, `deliveryPref` and `listSaved` checks, the recipient-hash re-check, the Saved-blob handling, ROTATION step 3's app steps, and the skill description's app triggers), checked against the app's source but not run by Muse; and the fetch route's own checks, which wait for an app build that hands saved blobs to the agent's store. As before, the reviewers were AI agent sessions in the author's setup, plus the author: peer review inside one shop, not a third-party audit.
 
 ### Added
 
+- **The app as the user's side** (#20): the credential-lockbox-muse app can be your side instead of the script, if you choose it in chat. Your Muse builds it, gives it its recipient, and still compares the recipient with you in chat. You send by Copy and paste for now. `SETUP.md`, "The app as the user's side", has the conditions, and README invariants 6 and 7 say what choosing the app means.
 - **SECURITY.md says which versions get security fixes** (#19, closes #18): the latest release only, with every release listed and what upgrading from each involves. Reports about the releases made in `cmeans/muse-field-kit` come here. CONTRIBUTING's release step updates the section and `ci.yml`'s release-notes list.
 
 ## 0.3.2 — 2026-11-24 — the docs point here
