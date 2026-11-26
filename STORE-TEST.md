@@ -126,6 +126,17 @@ Score each item pass, partial, or fail, and give the evidence for each score: th
    an account of its own or space shared with my other data. If
    there is no free tier, give the lowest paid price.
 
+8. **The app's write path** (only if the store will back the
+   credential-lockbox-muse app's Save, and only with a throwaway build
+   of the app and its test recipient). Save the 400-character blob from
+   the app into the pending area recorded for `store-test`. Then:
+   does it appear in your own `list-pending` output for `store-test`,
+   with an arrival time? Does the code you compute from it match the
+   app's Receipt? Does a second create under the same pending name fail
+   rather than replace? Did the Save leave a copy anywhere on your
+   machine, the app's own storage included? Does `delete-pending`
+   remove it, and does it refuse a label slot's name?
+
 Also say where a fetched blob lands on your side (in memory, or in a file, and on which disk), and remove any file copy when you are done. A synced or cached local copy counts as a local copy.
 
 ## Clean up
@@ -145,6 +156,7 @@ End with exactly this table, filled in, and the verdict line:
 | History after delete | | |
 | Store credential scope | | |
 | Limits and cost | | |
+| App write path (or "not tested") | | |
 
 Store: / Date: / Agent and platform:
 Cleaned up: yes or no
