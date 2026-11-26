@@ -137,11 +137,13 @@ Score each item pass, partial, or fail, and give the evidence for each score: th
    into the pending area recorded for `store-test`. Then:
    does it appear in your own `list-pending` output for `store-test`,
    with the store's id and an arrival time? Fetch it with
-   `fetch-pending` and run the check above on it: does it pass, and
-   does the code you compute match the app's Receipt? What does a
-   second create under the same pending name do: fail, replace, or
-   make a second item? (Any of the three is recorded; a store that
-   makes a second item is addressed by id.) Did the Save leave a copy
+   `fetch-pending` and run the check above on it (`svc` must match;
+   the password length is the one you typed): does it pass, and
+   does the code you compute match the app's Receipt? Repeat it with
+   a dummy whose blob is about 2,700 characters (a `password` of
+   about 1,800 `x`s typed or pasted into the app): the store may
+   split or wrap a longer blob, and the code must still match. Did
+   the Save leave a copy
    anywhere on your machine, the app's own storage included? Does
    `delete-pending` remove it, and do `fetch-pending` and
    `delete-pending` refuse a label slot's id?
